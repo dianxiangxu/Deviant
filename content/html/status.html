@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang = "en">
+<div id="bg-main"></div>
+<head>
+    <title>Solidity Mutation</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<link rel = "stylesheet" href = "../css/main.css">
+</head>
+
+<body>
+<div class="container-fluid p-2 bg-dark text-white" style = "min-height:100%">
+
+    <script src="../js/req.js"></script>
+	<script src="../js/main.js"></script>
+	<script src="../js/report.js"></script>
+
+<div class = "container mt-3">
+
+    <h3>Running Tests</h3>
+    <textarea rows='8' style = "width:99%" id='status-textbox' readonly></textarea>
+
+</div>
+</div>
+</div>
+
+<script>
+    const electron = require('electron');
+    const {ipcRenderer} = electron;
+    var testExec = require('../../report/TestMutant.js');
+
+    ipcRenderer.on('run:mutants', function(e, params) {
+        console.log('running tests');
+        testExec.runMutants(params[0], params[1], params[2], params[3], params[4]);
+    });
+
+    
+</script>
+</body>
+</html>

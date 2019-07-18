@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang = "en">
+<div id="bg-main"></div>
+<head>
+    <title>Solidity Mutation</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<link rel = "stylesheet" href = "../css/main.css">
+</head>
+
+<body>
+<div class="container-fluid p-2 bg-dark text-white" style = "min-height:100%">
+
+    <script src="../js/req.js"></script>
+	<script src="../js/main.js"></script>
+	<script src="../js/report.js"></script>
+
+<div class = "container mt-3">
+	<div class = "row">
+		<div class = "col-sm-4">
+			<label for "display-file">Select original file</label>
+			<select class = "custom-select" size="7" id='display-files-orig' multiple
+                onchange="
+                    wipeList('display-files-mut');
+            
+                    listFiles('display-files-mut',
+                    outputLoc+
+                    '/'+document.getElementById('display-files-orig').value.replace(/^.*[\\\/]/, '')
+                    .replace('.sol', ''),
+                    true
+                    );
+
+                    mutantStats = getMutantStats(document.getElementById('display-files-orig').value, outputLoc.replace('./sol_output/', ''));
+               
+		console.log(mutantStats);
+		 mutantFileEle = document.getElementById('display-files-mut'); 
+
+		console.log(mutantFileEle.options.length);
+		 for (var i = 0; i < mutantFileEle.options.length; i++) {
+                        console.log('-----'+i+'----');
+			console.log(mutantFileEle.options[i].name);
+			mutantFileEle.options[i].text = mutantFileEle.options[i].text 				 
+			    + ' '
+			    + mutantStats[mutantFile.options[i].text];
+
+			console.log(mutantFileEle.options[i].text);
+		   }
+		"
+            >
+			</select>
+        
+            <label for "display-file">Select mutant file</label>
+            <select class = "custom-select" size="7" id='display-files-mut' multiple
+                onchange="
+                    getMutantDiff(document.getElementById('display-files-orig').value,
+                    document.getElementById('display-files-mut').value);
+                "
+            >
+            </select>
+        </div>
+
+		
+		<div class = "col-sm-8">
+            <label for "diff-textbox">Mutation Changes</label>
+		    <textarea rows='16' style="width:99%;" id="diff-textbox" readonly></textarea>
+        </div>
+        
+	
+	</div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <label for 'stats-textbox'>Mutation Statistics</label>
+            <textarea rows='8' style = "width:99%" id='stats-textbox' readonly></textarea>
+        </div>
+    </div>
+</div>
+	<script>
+        const electron = require('electron');
+        const {ipcRenderer} = electron;
+        var project = '';
+        var outputLoc;
+	var mutantStats;
+
+        ipcRenderer.send('send:outputLoc');
+        ipcRenderer.on('get:outputLoc', function(e, data) {
+            console.log(outputLoc);
+            outputLoc = data;
+        });
+
+        ipcRenderer.on('get:project', function(e, data) {
+            project = data;
+            console.log(project);
+            wipeList('display-files-orig');
+            listFiles('display-files-orig',
+                project,
+                false
+            );
+
+        });
+
+        ipcRenderer.send('send:project');
+
+        loadFile = function(div, file) {
+			$(div).load(file);
+			$(div).text($(div).text().split("\n").join("\\n"));
+	}
+	loadDiff = function(div, orig, mut) {
+			
+	}
+	</script>
+
+</div>
+</body>
+</html>

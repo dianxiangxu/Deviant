@@ -1,0 +1,11 @@
+{
+  "name": "mutation",
+  "version": "1.0.0",
+  "description": "Mutation files for solidity-mutation.",
+  "main": "mutation.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Patrick Chapman",
+  "license": "ISC"
+}

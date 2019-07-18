@@ -1,0 +1,16 @@
+html, body, .container, .mt-3 {
+	height: 100%;
+    font-family: "Open Sans";
+}
+
+a {
+    color: white
+}
+
+a .active {
+    color: black
+}
+
+select {
+    background-color: gray !important:
+}

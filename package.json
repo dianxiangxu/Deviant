@@ -1,0 +1,32 @@
+{
+  "name": "solidity-mutation",
+  "version": "1.0.0",
+  "description": "Mutation generation for Solidity smart contracts.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/patrickjchap/Deviant.git"
+  },
+  "main": "window.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Patrick Chapman",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "electron": "^3.1.8",
+    "jquery": "^3.4.0",
+    "json-to-ast": "~2.0.3",
+    "popper.js": "^1.15.0",
+    "remote": "^0.2.6",
+    "safe-eval": "^0.4.1",
+    "solidity-parser": "^0.4.0",
+    "solidity-parser-antlr": "^0.3.1",
+    "solmeister": "git+https://github.com/patrickjchap/solmeister.git",
+    "solparse": "~2.2.5",
+    "soltar": "^2.0.6"
+  },
+  "devDependencies": {
+    "electron": "^3.0.1"
+  }
+}

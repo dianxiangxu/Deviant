@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang = "en">
+<div id="bg-main"></div>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<link rel = "stylesheet" href = "../css/main.css">
+</head>
+
+
+<body>
+<div class="container-fluid p-2 bg-dark text-white" style = "min-height:100%">
+	<script src="../js/req.js"></script>
+    <script src="../js/main.js"></script>
+
+	<div class="jumbotron-fluid bg-secondary text-center">
+		<h1 class = "pt-3">Deviant</h1>
+		<p class = "pb-3">A Solidity mutation testing tool</p>
+	</div>
+
+<div class = "container mt-3">
+	<form>
+		<div class="form-group">
+			<label for="mutDir">Select project directory</label>
+			<input type="file" id="mutDir" class = "form-control-file" webkitdirectory 
+                multiple onchange="
+                wipeList('display-files');
+
+                listFiles('display-files', 
+                    document.getElementById('mutDir').files[0].path.toString()
+                    , false);
+                    
+                ipcRenderer.send('save:project', document.getElementById('mutDir').
+                files[0].path.toString());
+                "
+            >
+		</div>
+
+		<div class="form-group">
+            <label for="mutDir">Select files for mutation</label>
+			<script src="../js/main.js"></script>
+			<select class = "custom-select" size="16" id='display-files' multiple></select>
+		</div>
+
+		<button id="selectMut" type="button" class = "btn btn-primary btn-md" 
+            value = "selectMut" onclick = "openMutPage()">
+            Select Mutation Operators
+        </button>
+		<button id="run" type = "button" class = "btn btn-primary btn-md" 
+            value="Run" onclick = "runTests()">
+            Run Mutants
+        </button>
+	</form>
+
+    <div class = "container mt-3">
+        <p id = "status"></p>
+    </div>
+
+</div>
+
+	<script>
+		const electron = require('electron');
+		const {ipcRenderer} = electron;
+
+		//const form = document.querySelector('form');
+		//form.addEventListener('submit', submitForm);
+        
+        ipcRenderer.on('get:project', function(e, project) {
+            console.log('made it');
+            document.getElementById('mutDir').files[0] = {
+                name: project.replace(/^.*[\\\/]/, ''),
+                path: project
+            };
+        });
+    
+//		$(window).onunload = function(e) {
+//			e.preventDefault();
+//          const mutDirectory = document.getElementById('mutDir').files[0].path;
+//            const fileEle = document.getElementById('display-files')
+//            const mutFile = fileEle.options[fileEle.selectedIndex].value;
+//            const mutFileName = fileEle.options[fileEle.selectedIndex].getAttribute("name");
+//
+//           var mutParam = [mutFile, mutDirectory, mutFileName]
+//
+//           // Sending back to the applicaiton
+//            ipcRenderer.send('file:select', mutParam);
+//		}
+
+        /*
+         * Builds parameters from GUI and sends back information to renderer
+         */
+		function genMutants(){
+            //Building parameters to send back to renderer
+			const mutDirectory = document.getElementById('mutDir').files[0].path;
+			const fileEle = document.getElementById('display-files')
+			const mutFiles = [];
+
+            for(var i = 0; i < fileEle.options.length; i++) {
+                if(fileEle.options[i].selected){
+                    mutFiles.push(fileEle.options[i].value);
+                }
+            }
+
+			var mutParam = [mutFiles, mutDirectory]
+
+			//Using renderer to generate mutants
+			ipcRenderer.send('generateMutants', mutParam);
+		}
+
+        /*
+         * Calls genMutants() and then sends parameteres to renderer to run tests
+         */
+		function runTests(){
+			genMutants();
+            const mutDirectory = document.getElementById('mutDir').files[0].path;
+			const fileEle = document.getElementById('display-files');
+			var mutFiles = [];
+
+            for(var i = 0; i < fileEle.options.length; i ++){
+                if(fileEle.options[i].selected){
+                    mutFiles.push(fileEle.options[i].value);
+                }
+            }
+
+			var mutParam = [mutDirectory, mutFiles];
+			ipcRenderer.send('run:tests', mutParam);
+		}
+
+        //function openReportPage(){
+        //    ipcRenderer.send('open:report');      
+        //}
+
+        function openMutPage(){
+            ipcRenderer.send('open:mut');
+        }
+
+		window.onmousedown = function (e) {
+			var el = e.target;
+			if (el.tagName.toLowerCase() == 'option' && el.parentNode.hasAttribute('multiple')) {
+				e.preventDefault();
+
+				// toggle selection
+				if (el.hasAttribute('selected')) el.removeAttribute('selected');
+				else el.setAttribute('selected', '');
+
+				// hack to correct buggy behavior
+				var select = el.parentNode.cloneNode(true);
+				el.parentNode.parentNode.replaceChild(select, el.parentNode);
+		}
+
+        ipcRenderer.on('send:update', function(e, statusUpdate) {
+            document.getElementById('status').innerHTML = statusUpdate;
+        });
+}
+	</script>
+</div>
+</body>
+</html>
