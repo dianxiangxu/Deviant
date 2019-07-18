@@ -1,8 +1,8 @@
-# Solidity Mutation
+# Deviant
 
 ## Description
 
-Mutant generation for Solidity.
+Mutation testing tool for Solidity smart contracts.
 
 ## Setup
 
@@ -21,10 +21,10 @@ Launching Deviant:
 
 2. Select the appropriate contracts for mutation testing from the list
 
-3. Click the select mutation operators button
+3. Click the **Select Mutation Operators** button
 
 4. Select and **save** the mutation operators that you wish to use
-* Note: If you close the window before saving, the mutation operators will not be saved
+	* Note: If you close the window before saving, the mutation operators will not be saved
 
 5. Click the **Run Tests** button
 
@@ -33,13 +33,18 @@ Launching Deviant:
 7. Once all the mutants have been ran, the report window will appear
 
 8. In the report window, select the file that you want to view a report for
-* Note: Clicking the mutant file will display the difference between the original file and the mutant
-* Note: The report is shown for each individual file, not the entire project
+	* Note: Clicking the mutant file will display the difference between the original file and the mutant
+	* Note: The report is shown for each individual file, not the entire project
 
-### Important Dependencies
+## Important Dependencies
 
 * [Solparse](https://github.com/duaraghav8/solparse)
 
 * [Solmeister](https://github.com/duaraghav8/solmeister)
 	* Note: We have forked this library as its depencies are out of date. The current version that we use is located [here](https://github.com/patrickjchap/solmeister).
+* [electron](https://github.com/electron/electron)
 
+## Future Work
+* Implementing "sessions" that users can open to view previous reports
+* Implementing CLI
+* Refactoring mutation operators
