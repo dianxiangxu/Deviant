@@ -11,10 +11,7 @@ function listFiles(divId, directory, is_mutant) {
     //console.log(typeof directory);
 
 
-    fs.readdir(directory, (err, files) => {
-		'use strict';
-
-		if (err) throw err;
+    var files = fs.readdirSync(directory);
 
 		for (let file of files) {
 
@@ -41,5 +38,4 @@ function listFiles(divId, directory, is_mutant) {
 
             }
 		}
-	});
 }

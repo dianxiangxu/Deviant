@@ -127,5 +127,25 @@ function getMutantStats(origFile, projectWithDate) {
     return mutantStatus;
 }
 
-    
+
+function updateStatus(outputLoc) {
+        mutantStats = getMutantStats(document.getElementById('display-files-orig').value,
+            outputLoc.replace('./sol_output/', ''));
+               
+        console.log(mutantStats);
+        mutantFileEle = document.getElementById('display-files-mut').options; 
+
+        console.log(mutantFileEle[0]);
+        for (var i = 0; i < mutantFileEle.length; i++) {
+                        console.log('-----'+i+'----');
+            console.log(mutantFileEle[i].name);
+            mutantFileEle[i].text = 
+                mutantStats[mutantFileEle[i].text]
+                + ' '
+                + mutantFileEle[i].text;                
+
+            console.log(mutantFileEle[i].text);
+        }
+}
+
 
