@@ -28,22 +28,7 @@
                     .replace('.sol', ''),
                     true
                     );
-
-                    mutantStats = getMutantStats(document.getElementById('display-files-orig').value, outputLoc.replace('./sol_output/', ''));
-               
-		console.log(mutantStats);
-		 mutantFileEle = document.getElementById('display-files-mut'); 
-
-		console.log(mutantFileEle.options.length);
-		 for (var i = 0; i < mutantFileEle.options.length; i++) {
-                        console.log('-----'+i+'----');
-			console.log(mutantFileEle.options[i].name);
-			mutantFileEle.options[i].text = mutantFileEle.options[i].text 				 
-			    + ' '
-			    + mutantStats[mutantFile.options[i].text];
-
-			console.log(mutantFileEle.options[i].text);
-		   }
+                    updateStatus(outputLoc);
 		"
             >
 			</select>
