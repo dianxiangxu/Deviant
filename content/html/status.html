@@ -26,7 +26,7 @@
 <script>
     const electron = require('electron');
     const {ipcRenderer} = electron;
-    var testExec = require('../../report/TestMutant.js');
+    var testExec = require('../../test_execution/TestMutant.js');
 
     ipcRenderer.on('run:mutants', function(e, params) {
         console.log('running tests');
