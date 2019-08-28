@@ -22,16 +22,17 @@ exports.runMutants = function(mutantDirectory, contractDirectory, contractFile, 
 		});
 
         	ipcRenderer.send('get:statusUpdate', 'Status: Testing ' + filename
-			+ '&emsp; Total: ' + total_mutants + ' Killed: ' + killed
-			+ ' Live: ' + live
-		);
+			    + '&emsp; Total: ' + total_mutants + ' Killed: ' + killed
+			    + ' Live: ' + live
+            );
 
 		let child;
 		try{
 			try{
 
                 exec('sudo rm -rf /tmp/*', 
-				    {encoding: 'utf8', maxBuffer: 50 * 1024 * 1024});
+				    {encoding: 'utf8', maxBuffer: 50 * 1024 * 1024}
+                );
             }catch(err) {
                 
             }

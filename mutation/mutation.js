@@ -44,6 +44,4 @@ var over = require('./ContractLevel/OverridingOperators.js');
 var superOp = require('./ContractLevel/SuperContractOperators.js');
 
 exports.generateMutants = function(file, filename, operators) {
-    for(operator
-    superOp.mutateTypeCastChange(file, filename);    
 }
