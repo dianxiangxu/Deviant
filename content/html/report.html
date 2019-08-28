@@ -23,13 +23,12 @@
                     wipeList('display-files-mut');
             
                     listFiles('display-files-mut',
-                    outputLoc+
-                    '/'+document.getElementById('display-files-orig').value.replace(/^.*[\\\/]/, '')
-                    .replace('.sol', ''),
-                    true
-                    );
+                        outputLoc + '/' 
+                            + document.getElementById('display-files-orig').value
+                            .replace(/^.*[\\\/]/, '').replace('.sol', ''),
+                        true);
                     updateStatus(outputLoc);
-		"
+		        "
             >
 			</select>
         

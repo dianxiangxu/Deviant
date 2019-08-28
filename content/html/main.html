@@ -22,18 +22,16 @@
 	<form>
 		<div class="form-group">
 			<label for="mutDir">Select project directory</label>
-			<input type="file" id="mutDir" class = "form-control-file" webkitdirectory 
+			<input type="file" id="mutDir" class = "form-control-file" webkitdirectory
                 multiple onchange="
-                wipeList('display-files');
+                    wipeList('display-files');
 
-                listFiles('display-files', 
-                    document.getElementById('mutDir').files[0].path.toString()
-                    , false);
+                    listFiles('display-files', 
+                        document.getElementById('mutDir').files[0].path.toString(), false);
                     
-                ipcRenderer.send('save:project', document.getElementById('mutDir').
-                files[0].path.toString());
-                "
-            >
+                    ipcRenderer.send('save:project', 
+                        document.getElementById('mutDir').files[0].path.toString());
+            ">
 		</div>
 
 		<div class="form-group">
@@ -58,7 +56,7 @@
 
 </div>
 
-	<script>
+    <script>
 		const electron = require('electron');
 		const {ipcRenderer} = electron;
 
@@ -146,12 +144,12 @@
 				// hack to correct buggy behavior
 				var select = el.parentNode.cloneNode(true);
 				el.parentNode.parentNode.replaceChild(select, el.parentNode);
-		}
+		    }
 
-        ipcRenderer.on('send:update', function(e, statusUpdate) {
-            document.getElementById('status').innerHTML = statusUpdate;
-        });
-}
+            ipcRenderer.on('send:update', function(e, statusUpdate) {
+                document.getElementById('status').innerHTML = statusUpdate;
+            });
+        }
 	</script>
 </div>
 </body>
