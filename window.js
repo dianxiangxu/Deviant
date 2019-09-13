@@ -159,7 +159,7 @@ function createMutOpWindow(){
 		mutOpWindow.webContents.send('pop-checkboxes', mutOpt);
 	});
 
-	//mutOpWindow.webContents.openDevTools();
+	mutOpWindow.webContents.openDevTools();
 }
 
 //Report Window

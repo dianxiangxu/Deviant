@@ -52,6 +52,11 @@ exports.mutateSelfdestructOperator = function(file, filename){
 				var selfdestruct_statement = 'selfdestruct(address(0x123));\n }';
 				var pos = node.getSourceCode().lastIndexOf('}');
 
+                if (node.getSourceCode().includes('return\s')){
+                    //Change the position of insertion in case the block has a return statement.
+                    pos = node.getSourceCode().lastIndexOf('return\s');
+                }
+
 				fs.writeFile("./sol_output/" + filename + "/"
                     + path.basename(file).slice(0, -4) + "SelfdestructInsert"
                     + fileNum.toString() + ".sol", data.toString().replace(
