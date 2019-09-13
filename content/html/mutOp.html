@@ -128,7 +128,7 @@
 
 					<div class = "form-check">
                         <label class = "form-check-label">
-							<input type = "checkbox" data-toggle = "collapse" data-target = "#literalList" class = "form-check-input" name = "stLvl" value = "StringOp">Literal
+							<input type = "checkbox" data-toggle = "collapse" data-target = "#literalList" class = "form-check-input" name = "stLvl" value = "litOpList;">Literal
 						</label>
 					</div>
 
@@ -250,7 +250,7 @@
                     <div class = "form-check">
                         <label class = "form-check-label">
                             <input type = "checkbox" data-toggle = "collapse" data-target = "#overList" 
-                                class = "form-check-input" name = "intraLvl">
+                                class = "form-check-input" name = "intraLvl" value = "OVOpList">
                                 Overriding Operators
                         </label>
                     </div>
@@ -275,7 +275,7 @@
     
                     <div class = "form-check">
                         <label class = "form-check-label">
-                            <input type = "checkbox" data-toggle = "collapse" data-target = "#HVList" class = "form-check-input" name = "stLvl">Hiding Variable Operators
+                            <input type = "checkbox" data-toggle = "collapse" data-target = "#HVList" class = "form-check-input" name = "intraLvl" value = "HVOpList">Hiding Variable Operators
                         </label>
                     </div>
 
@@ -294,7 +294,7 @@
 
                     <div class = "form-check">
                         <label class = "form-check-label">
-                            <input type = "checkbox" data-toggle = "collapse" data-target = "#typeList" class = "form-check-input" name = "intralLvl">Type Operators
+                            <input type = "checkbox" data-toggle = "collapse" data-target = "#typeList" class = "form-check-input" name = "intraLvl" value = "typeOpList;">Type Operators
                         </label>
                     </div>
 
@@ -355,13 +355,12 @@
 
 
 					<button type="submit" class = "btn btn-primary btn-sm">Save</button>
-
 			</div>
 	
 			<!-- Inter-Class Level Operators -->
 			<div id="intermoduleLvl" class = "container tab-pane">
 				<h3> Inter-Module Level </h3>
-					<span><label><input type = "checkbox" onClick= "toggle(this, 'interLvl')" /> Select All </label> </span>
+                    <span><label><input type = "checkbox" onClick= "toggle(this, 'interLvl')" /> Select All </label> </span>
                     <div class = "form-check">
 						<label class = "form-check-label">
 							<input type = "checkbox" class = "mutCheck" name = "interlvl" value = "multInheritance">Multiple-Inheritance Operators
@@ -371,7 +370,8 @@
 
 
 					<button type="submit" class = "btn btn-primary btn-sm pt-2">Save</button>
-					</form>
+                    </form>
+>>>>>>> b813dcdcf5480f389661f9b07bf0c30860a47b7d
 			</div>
 		
 		</div>
@@ -381,8 +381,11 @@
 		const electron = require('electron');
 		const {ipcRenderer} = electron;
 
-        const form = document.querySelector('form');
-        form.addEventListener('submit', submitForm);
+        const forms = document.querySelectorAll('form');
+
+        for(var i = 0; i < forms.length; i++) {
+            forms[i].addEventListener('submit', submitForm);
+        }
 
 			//populating checkboxes with saved data
 			ipcRenderer.on('pop-checkboxes', function(e, data) {
@@ -392,6 +395,14 @@
 				for(var i = 0; mutOps[i]; ++i){
 					if(data.includes(mutOps[i].value)){
 						mutOps[i].checked = true;
+                        if(mutOps[i].value.includes("List")) {
+                            var targetList = mutOps[i].getAttribute("data-target");
+                            targetList = targetList.replace("#", "");
+                
+                            console.log(targetList);
+                            targetEle = document.getElementById(targetList);
+                            targetEle.setAttribute("class", "collapse show");
+                        }
 					}
 				}
 			});
@@ -401,9 +412,7 @@
 				var mutParam = "";
 				var mutOps = document.getElementsByClassName('form-check-input');
 				for(var i = 0; mutOps[i]; ++i){
-					if(mutOps[i].checked && mutOps[i].value != "on"
-                        && mutOps[i].value != "StringOp"
-                    ){
+					if(mutOps[i].checked && mutOps[i].value != "on"){
 						console.log(mutOps[i].value);
 						mutParam += mutOps[i].value;
 					}

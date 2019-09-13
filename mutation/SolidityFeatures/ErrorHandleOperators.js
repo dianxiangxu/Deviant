@@ -32,7 +32,7 @@ exports.mutateErrorHandleOperator = function(file, filename){
 			) {
 					
 				fs.writeFile("./sol_output/" + filename + '/'
-                	+ path.basename(file).slice(0, -4) + "ErrorHandle"
+                	+ path.basename(file).slice(0, -4) + "ErrorHandleDeletion"
                     + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
                     ""), 'ascii', function(err) {
 						if(err) throw err;
@@ -49,6 +49,11 @@ exports.mutateErrorHandleOperator = function(file, filename){
 				var assert_statement = 'assert(false);}';
 				var revert_statement = 'revert("this is a mutant");}';
                 var pos = node.getSourceCode().lastIndexOf('}');
+
+                if (node.getSourceCode().includes('return\s')){
+                    //Change the position of insertion in case the block has a return statement.
+                    pos = node.getSourceCode().lastIndexOf('return\s');
+                }
 
                 fs.writeFile("./sol_output/" + filename + "/"
                     + path.basename(file).slice(0, -4) + "ErrorHandleReqInsert"
