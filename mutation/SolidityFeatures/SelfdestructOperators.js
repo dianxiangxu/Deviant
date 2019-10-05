@@ -19,7 +19,7 @@ let options = {
 };
 
 
-
+//TODO: Split into multiple functions
 exports.mutateSelfdestructOperator = function(file, filename){
 //	console.log("Binary Operators Found");
 	var ast;
@@ -52,9 +52,9 @@ exports.mutateSelfdestructOperator = function(file, filename){
 				var selfdestruct_statement = 'selfdestruct(address(0x123));\n }';
 				var pos = node.getSourceCode().lastIndexOf('}');
 
-                if (node.getSourceCode().includes('return\s')){
+                if (node.getSourceCode().includes('return ')){
                     //Change the position of insertion in case the block has a return statement.
-                    pos = node.getSourceCode().lastIndexOf('return\s');
+			pos = node.getSourceCode().lastIndexOf('return ');
                 }
 
 				fs.writeFile("./sol_output/" + filename + "/"

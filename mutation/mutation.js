@@ -1,3 +1,6 @@
+``` This is primarily used for the cli
+```
+
 var fs = require('fs');
 
 exports.generateMutant = function(file, filename, functionNames){
@@ -27,6 +30,7 @@ var modifiable = require("./SolidityFeatures/ModifiableDataOperators.js");
 var modifier = require("./SolidityFeatures/ModifierOperators.js");
 var sd = require("./SolidityFeatures/SelfdestructOperators.js");
 var sv = require("./SolidityFeatures/StateVariableOperators.js");
+var mult = require("./SolidityFeatures/MultipleInheritanceOperators.js");
 //Statement Level
 var assign = require('./StatementLevel/AssignmentOperators.js');
 var binary = require('./StatementLevel/BinaryOperators.js');
@@ -43,5 +47,15 @@ var statement = require('./FunctionLevel/StatementModifierOperators.js');
 var over = require('./ContractLevel/OverridingOperators.js');
 var superOp = require('./ContractLevel/SuperContractOperators.js');
 
-exports.generateMutants = function(file, filename, operators) {
+exports.generateTraditionalMutants = function(file, filename) {
+
+}
+
+exports.generateSolidityMutants = function(file, filename) {
+
+}
+
+exports.generateMutants = function(file, filename) {
+    generateTraditionalMutants(file, filename);
+    generateSolidityMutants(file, filename);
 }

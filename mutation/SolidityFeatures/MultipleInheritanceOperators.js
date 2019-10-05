@@ -23,7 +23,8 @@ let options = {
 };
 
 
-
+//This operator simply checks for multiple parents for a contract and
+//removes one of them. NOT guaranteed to generate a valid mutant.
 exports.mutateMultipleInheritanceOperator = function(file, filename){
 //	console.log("Binary Operators Found");
 	var ast;

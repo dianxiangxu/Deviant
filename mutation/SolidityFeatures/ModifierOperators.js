@@ -33,7 +33,7 @@ let options = {
 };
 
 
-
+//TODO: Split into multiple functions
 exports.mutateModifierOperator = function(file, filename){
 	var ast;
 	fs.readFile(file, function(err, data) {	

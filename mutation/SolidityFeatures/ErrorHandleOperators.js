@@ -18,7 +18,7 @@ let options = {
 };
 
 
-
+//TODO: Split into multiple functions
 exports.mutateErrorHandleOperator = function(file, filename){
 	var ast;
 	fs.readFile(file, function(err, data) {	
@@ -50,9 +50,9 @@ exports.mutateErrorHandleOperator = function(file, filename){
 				var revert_statement = 'revert("this is a mutant");}';
                 var pos = node.getSourceCode().lastIndexOf('}');
 
-                if (node.getSourceCode().includes('return\s')){
+                if (node.getSourceCode().includes('return ')){
                     //Change the position of insertion in case the block has a return statement.
-                    pos = node.getSourceCode().lastIndexOf('return\s');
+                    pos = node.getSourceCode().lastIndexOf('return ');
                 }
 
                 fs.writeFile("./sol_output/" + filename + "/"

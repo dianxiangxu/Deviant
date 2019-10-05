@@ -24,7 +24,7 @@ newline: '\n\n',
 };
 
 
-
+//TODO: Split into multiple functions
 exports.mutateFunctionVisibilityOperator = function(file, filename){
     var ast;
 

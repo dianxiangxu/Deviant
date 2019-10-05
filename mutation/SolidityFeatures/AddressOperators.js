@@ -173,3 +173,7 @@ exports.mutateAddressSwitchCallExpressionOperator = function(file, filename) {
     }
 }
 
+exports.mutateAddressAll  = function(file, filename) {
+    mutateAddressSwitchCallExpressionOperator(file, filename);
+    mutateAddressLiteralOperator(file, filename);
+}
