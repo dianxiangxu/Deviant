@@ -35,22 +35,25 @@ var superOp = require('./mutation/ContractLevel/SuperContractOperators.js');
 
 //For running different experiments
 var currTime = new Date();
+var testExec = require('./test_execution/TestMutant.js')
+const process = require('process');
+const fs = require('fs');
 
 //TODO: This mutant generation should go somewhere else
 genSolidityMutants = function(file, filename_directory) {
-    addressFunction.mutateAddressFunctionOperator(file, filename_directory);
+    //addressFunction.mutateAddressFunctionOperator(file, filename_directory);
     address.mutateAddressAll(file, filename_directory);
-    error.mutateErrorHandleOperator(file, filename_directory);
-    events.mutateEventOperator(file, filename_directory);
-    functionType.mutateFunctionTypeOperator(file, filename_directory);
-    functionVis.mutateFunctionVisbilityOperator(file, filename_directory);
-    gas.mutateGasOperator(file, filename_directory);
-    library.mutateLibraryOperator(file, filename_directory);
-    modifiable.mutateDataLocationOperator(file, filename_directory);
-    modifier.mutateModifierOperator(file, filename_directory);
-    sd.mutateSelfdestructOperator(file, filename_directory);
-    sv.mutateStateVarOperator(file, filename_directory);
-    multi.mutateMultipleInheritanceOperator(file, filename_directory);
+    //error.mutateErrorHandleOperator(file, filename_directory);
+    //events.mutateEventOperator(file, filename_directory);
+    //functionType.mutateFunctionTypeOperator(file, filename_directory);
+    //functionVis.mutateFunctionVisibilityOperator(file, filename_directory);
+    //gas.mutateGasOperator(file, filename_directory);
+    //library.mutateLibraryOperator(file, filename_directory);
+    //modifiable.mutateDataLocationOperator(file, filename_directory);
+    //modifier.mutateModifierOperator(file, filename_directory);
+    //sd.mutateSelfdestructOperator(file, filename_directory);
+    //sv.mutateStateVarOperator(file, filename_directory);
+    //multi.mutateMultipleInheritanceOperator(file, filename_directory);
 }
 
 genTraditionalMutants = function(file, filename_directory) {
@@ -68,29 +71,38 @@ genTraditionalMutants = function(file, filename_directory) {
     unOp.mutateUnaryOperator(file, filename_directory);
 }
 
-genMutants = function(file, project_directory, operator_flag) {
+genMutants = async function(file, project_directory, operator_flag) {
     filename_directory = mutant_output_directory + '/' + file.replace(/^.*[\\\/]/, '');
-    filename_directory = filename_directory.replace('./sol', '');
+    filename_directory = filename_directory.replace('.sol', '');
 
     if(!fs.existsSync(filename_directory)){
         fs.mkdirSync(filename_directory);
     }
 
+    filename_directory = filename_directory.replace('./sol_output/', '');
+    
     if(operator_flag == 'ALL') {
-        genSolidityMutants(file, filename);
-        genTraditionalMutants(file, filename);
+        genSolidityMutants(file, filename_directory);
+        genTraditionalMutants(file, filename_directory);
     }else if(operator_flag == "SOLIDITY") {
-        genSolidityMutants(file, filename);
+        genSolidityMutants(file, filename_directory);
     }else if(operator_flag == "TRADITIONAL") {
-        genTraditionalMutants(file, filename);
+        genTraditionalMutants(file, filename_directory);
     }
 }
 
-f = "";
-operators = "SOLIDITY";
-is_default = true;
-project_directory = '';
-mutant_output_directory = '';
+runMutants = function(file, mutant_output_directory, project_directory, txt_report_directory) {
+    console.log("Running");
+    testExec.runMutants(mutant_output_directory, project_directory+'/contracts/', file, project_directory, txt_report_directory);
+}
+
+var filename_directory = ""
+var f = "";
+var operators = "SOLIDITY";
+var is_default = true;
+var project_directory = '';
+var mutant_output_directory = '';
+var txt_report_directory =  '';
 
 //TODO: Come up with a way to mutate more
 //than one file at a time
@@ -98,29 +110,42 @@ try{
     for(i = 2; i < process.argv.length; i++) {
         if(process.argv[i] == "--file"){
             f = process.argv[i+1]
-        }else if(process.arv[i] == "--operators"){
+        }else if(process.argv[i] == "--operators"){
             operators = process.argv[i+1];
             is_default = false;
         }else if(process.argv[i] == "--project-directory"){
-            project_directory = process.argv[i];
+            project_directory = process.argv[i+1];
         }
     }
 
     if (is_default){console.log("Using default operator flag SOLIDITY");}
     if (project_directory == ""){throw "Project directory argument must be given!";}
-    if (operators != "ALL" || operators != "TRADITIONAL" || operators != "SOLIDITY"){
+    if (operators != "ALL" && operators != "TRADITIONAL" && operators != "SOLIDITY"){
         throw "Invalid operator argument!\n";
     }
+
+    if(project_directory.lastIndexOf('/') == project_directory.length-1){
+        project_directory = project_directory.substring(0, project_directory.length-1);
+    }
+
     mutant_output_directory = './sol_output/'
         + project_directory.replace(/^.*[\\\/]/, '')
-        + '-' + currTime;
+        + '-' + currTime + '/';
+    txt_report_directory = './txt_reports/'
+        + project_directory.replace(/^.*[\\\/]/, '')
+        + '-' + currTime + '/';
 
-    
+    if(!fs.existsSync('./txt_reports/')){
+        fs.mkdirSync('./txt_reports/');
+    }
     if(!fs.existsSync('./sol_output/')) {
         fs.mkdirSync('./sol_output/');
     }
     if(!fs.existsSync(mutant_output_directory)){
         fs.mkdirSync(mutant_output_directory);
+    }
+    if(!fs.existsSync(txt_report_directory)){
+        fs.mkdirSync(txt_report_directory);
     }
 
 }catch(e) {
@@ -134,4 +159,9 @@ try{
 }
 
 genMutants(f, project_directory, operators);
-//runMutants();
+
+//console.log(f);
+//console.log(mutant_output_directory);
+//console.log(txt_report_directory);
+
+runMutants(f, './sol_output/'+filename_directory.replace('//', '/')+'/', project_directory, txt_report_directory);
