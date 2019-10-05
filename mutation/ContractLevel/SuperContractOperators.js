@@ -250,3 +250,13 @@ exports.mutateTypeCastChange = function(file, filename) {
         });
     });
 }
+
+exports.mutateSuperTypeAll = function(file, filename) {
+    mutateTypeCastChange(file, filename);
+    mutateTypeCastDeletion(file, filename);
+    mutateTypeCastInsertion(file, filename);
+    mutateHidingVariableInsert(file, filename);
+    mutateHidingVariableDelete(file, filename);
+    mutateDeleteSuper(file, filename);
+    mutateInsertSuper(file, filename);
+}

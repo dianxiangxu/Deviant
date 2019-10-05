@@ -25,7 +25,7 @@ let options = {
 };
 
 
-
+//TODO: Split into multiple functions
 exports.mutateFunctionTypeOperator = function(file, filename){
 	var ast;
 	fs.readFile(file, function(err, data) {	

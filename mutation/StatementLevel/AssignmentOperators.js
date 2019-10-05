@@ -28,7 +28,9 @@ let options = {
 };
 
 
-
+//TODO: This generates too many invalid mutants. Rewrite to
+//only generate assignment mutants for supported types. For
+//example, strings do not support compound assignment operators.
 exports.mutateAssignmentOperator = function(file, filename){
 //	console.log("Binary Operators Found");
 	var ast;

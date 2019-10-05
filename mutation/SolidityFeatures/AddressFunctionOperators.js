@@ -24,6 +24,7 @@ let options = {
 
 
 
+// TODO: Split into multiple functions
 exports.mutateAddressFunctionOperator = function(file, filename){
 //	console.log("Binary Operators Found");
 	var ast;

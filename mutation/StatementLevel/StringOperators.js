@@ -15,7 +15,7 @@ let options = {
 };
 
 
-
+//TODO: Split into multiple functions
 exports.mutateStringOperator = function(file){
 	var ast;
 	fs.readFile(file, function(err, data) {	

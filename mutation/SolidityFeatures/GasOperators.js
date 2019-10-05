@@ -22,7 +22,8 @@ let options = {
 };
 
 
-
+//TODO: Consider reworking this operator. Only applied
+//in very situational circumstances
 exports.mutateGasOperator = function(file, filename){
 	var ast;
 	fs.readFile(file, function(err, data) {	

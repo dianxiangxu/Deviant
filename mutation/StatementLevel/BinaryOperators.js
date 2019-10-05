@@ -37,7 +37,6 @@ let options = {
 };
 
 
-
 exports.mutateBinaryOperator = function(file, filename){
 	var ast;
 	fs.readFile(file, function(err, data) {	
