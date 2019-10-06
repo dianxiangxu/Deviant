@@ -21,8 +21,7 @@ let options = {
 //TODO: Split into multiple functions
 exports.mutateErrorHandleOperator = function(file, filename){
 	var ast;
-	fs.readFile(file, function(err, data) {	
-		if(err) throw err;
+	data = fs.readFileSync(file);
 
 		fileNum = 1;
 		let mutCode = solm.edit(data.toString(), function(node) {
@@ -31,13 +30,10 @@ exports.mutateErrorHandleOperator = function(file, filename){
 				|| node.expression.callee.name == 'assert') 
 			) {
 					
-				fs.writeFile("./sol_output/" + filename + '/'
+				fs.writeFileSync("./sol_output/" + filename + '/'
                 	+ path.basename(file).slice(0, -4) + "ErrorHandleDeletion"
                     + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-                    ""), 'ascii', function(err) {
-						if(err) throw err;
-                    }
-				);
+                    ""), 'ascii');
                 fileNum++;
 			
 			}else if(node.hasOwnProperty('parent') && node.parent != null
@@ -55,35 +51,26 @@ exports.mutateErrorHandleOperator = function(file, filename){
                     pos = node.getSourceCode().lastIndexOf('return ');
                 }
 
-                fs.writeFile("./sol_output/" + filename + "/"
+                fs.writeFileSync("./sol_output/" + filename + "/"
                     + path.basename(file).slice(0, -4) + "ErrorHandleReqInsert"
                     + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(), 
                     node.getSourceCode().substring(0, pos) + require_statement)
-                    + node.getSourceCode().substring(pos + 1), 'ascii', function(err) {
-                        if(err) throw err;
-                    }
-                );
+                    + node.getSourceCode().substring(pos + 1), 'ascii');
                 fileNum++
 
-				fs.writeFile("./sol_output/" + filename + "/"
+				fs.writeFileSync("./sol_output/" + filename + "/"
                     + path.basename(file).slice(0, -4) + "ErrorHandleAssertInsert"
                     + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
                     node.getSourceCode().substring(0, pos) + assert_statement)
-                    + node.getSourceCode().substring(pos + 1), 'ascii', function(err) {
-                        if(err) throw err;
-                    }
-                );
+                    + node.getSourceCode().substring(pos + 1), 'ascii');
                 fileNum++
 
 
-				fs.writeFile("./sol_output/" + filename + "/"
+				fs.writeFileSync("./sol_output/" + filename + "/"
                     + path.basename(file).slice(0, -4) + "ErrorHandleRevertInsert"
                     + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
                     node.getSourceCode().substring(0, pos) + revert_statement)
-                    + node.getSourceCode().substring(pos + 1), 'ascii', function(err) {
-                        if(err) throw err;
-                    }
-                );
+                    + node.getSourceCode().substring(pos + 1), 'ascii');
                 fileNum++
 
 
@@ -91,8 +78,5 @@ exports.mutateErrorHandleOperator = function(file, filename){
 
 
 		});
-		
-	})
-	
 }
 

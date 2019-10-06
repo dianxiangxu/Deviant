@@ -9,27 +9,26 @@ exports.runMutants = function(mutantDirectory, contractDirectory, contractFile, 
 	var total_mutants = 0;
 	var contractName = contractFile.replace(/^.*[\\\/]/, '');
 
-	fs.rename(contractFile, contractFile + '.tmp', function(err) {
-		if (err) console.log('ERROR: ' + err);
-	});
+	fs.renameSync(contractFile, contractFile + '.tmp');
 
 	fs.readdirSync(mutantDirectory).forEach(function(file) {
 		var filename = file;
 		file = mutantDirectory + file;
-		console.log(file);
-		fs.copyFile(file, contractFile, function(err){
-			if(err) console.log(err);
-		});
-
-        	ipcRenderer.send('get:statusUpdate', 'Status: Testing ' + filename
-			    + '&emsp; Total: ' + total_mutants + ' Killed: ' + killed
-			    + ' Live: ' + live
-            );
+		console.log('Now testing: ' + file);
+        console.log('Replacing: ' + contractFile);
+		fs.copyFile(file, contractFile, function(err) {
+            if(err) console.log('ERROR: ' + err);
+        });
+            if(ipcRenderer != undefined){
+        	    ipcRenderer.send('get:statusUpdate', 'Status: Testing ' + filename
+			        + '&emsp; Total: ' + total_mutants + ' Killed: ' + killed
+			        + ' Live: ' + live
+                );
+            }
 
 		let child;
 		try{
 			try{
-
                 exec('sudo rm -rf /tmp/*', 
 				    {encoding: 'utf8', maxBuffer: 50 * 1024 * 1024}
                 );
@@ -85,8 +84,9 @@ exports.runMutants = function(mutantDirectory, contractDirectory, contractFile, 
 		}
 	});
 
-    ipcRenderer.send('get:statusUpdate', 'Status: Finished testing... View report for details.');
-	
+    if(ipcRenderer != undefined) {
+        ipcRenderer.send('get:statusUpdate', 'Status: Finished testing... View report for details.');
+    }
     fs.appendFileSync(reportDirectory + contractName + 'MutationReport.txt', 'Live: ' + live + '\n');
 	fs.appendFileSync(reportDirectory + contractName + 'MutationReport.txt', 'Killed: ' + killed + '\n');
 	fs.appendFileSync(reportDirectory + contractName + 'MutationReport.txt', 'Total: ' + total_mutants+ '\n');
