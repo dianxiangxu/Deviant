@@ -41,19 +41,19 @@ const fs = require('fs');
 
 //TODO: This mutant generation should go somewhere else
 genSolidityMutants = function(file, filename_directory) {
-    //addressFunction.mutateAddressFunctionOperator(file, filename_directory);
+    addressFunction.mutateAddressFunctionOperator(file, filename_directory);
     address.mutateAddressAll(file, filename_directory);
-    //error.mutateErrorHandleOperator(file, filename_directory);
-    //events.mutateEventOperator(file, filename_directory);
-    //functionType.mutateFunctionTypeOperator(file, filename_directory);
-    //functionVis.mutateFunctionVisibilityOperator(file, filename_directory);
-    //gas.mutateGasOperator(file, filename_directory);
-    //library.mutateLibraryOperator(file, filename_directory);
-    //modifiable.mutateDataLocationOperator(file, filename_directory);
-    //modifier.mutateModifierOperator(file, filename_directory);
-    //sd.mutateSelfdestructOperator(file, filename_directory);
-    //sv.mutateStateVarOperator(file, filename_directory);
-    //multi.mutateMultipleInheritanceOperator(file, filename_directory);
+    error.mutateErrorHandleOperator(file, filename_directory);
+    events.mutateEventOperator(file, filename_directory);
+    functionType.mutateFunctionTypeOperator(file, filename_directory);
+    functionVis.mutateFunctionVisibilityOperator(file, filename_directory);
+    gas.mutateGasOperator(file, filename_directory);
+    library.mutateLibraryOperator(file, filename_directory);
+    modifiable.mutateDataLocationOperator(file, filename_directory);
+    modifier.mutateModifierOperator(file, filename_directory);
+    sd.mutateSelfdestructOperator(file, filename_directory);
+    sv.mutateStateVarOperator(file, filename_directory);
+    multi.mutateMultipleInheritanceOperator(file, filename_directory);
 }
 
 genTraditionalMutants = function(file, filename_directory) {
