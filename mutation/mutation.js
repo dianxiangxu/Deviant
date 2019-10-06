@@ -1,5 +1,4 @@
-``` This is primarily used for the cli
-```
+/*This is currently not used, but will probably be used when refactoring*/
 
 var fs = require('fs');
 
