@@ -21,8 +21,7 @@ let options = {
 //TODO: Split into multiple functions
 exports.mutateEventOperator = function(file, filename){
 	var ast;
-	fs.readFile(file, function(err, data) {	
-		if(err) throw err;
+	data = fs.readFileSync(file);
 		var events = [];
 			
 
@@ -37,12 +36,10 @@ exports.mutateEventOperator = function(file, filename){
 			if(node.type === 'EmitStatement'){
 
 
-				fs.writeFile("./sol_output/" + filename + "/"
-				+ path.basename(file).slice(0, -4) + "EventDelMut"
-				+ fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-				""), 'ascii', function(err) {
-					if(err) throw err;
-				});
+				fs.writeFileSync("./sol_output/" + filename + "/"
+				    + path.basename(file).slice(0, -4) + "EventDelMut"
+				    + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
+				    ""), 'ascii');
 				fileNum++;
 
 				events.push(node.getSourceCode());
@@ -54,18 +51,14 @@ exports.mutateEventOperator = function(file, filename){
 			if(node.type === 'EmitStatement'){
                 for(i = 0; i < events.length; i ++) {
 					if(node.getSourceCode().valueOf() != events[i].valueOf()) {
-	                    fs.writeFile("./sol_output/" + filename + "/"
+	                    fs.writeFileSync("./sol_output/" + filename + "/"
                             + path.basename(file).slice(0, -4) + "EventSwapMut"
                             + fileNum.toString() + ".sol", data.toString().replace(
-                            node.getSourceCode(),events[i]), 'ascii', function(err) {
-                                    if(err) throw err;
-                            }
-                        );                          		
+                            node.getSourceCode(),events[i]), 'ascii');            		
 						fileNum++;
 					}
 				}
             } 
 		});
-	})
 }
 

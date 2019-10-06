@@ -28,8 +28,7 @@ let options = {
 exports.mutateAddressFunctionOperator = function(file, filename){
 //	console.log("Binary Operators Found");
 	var ast;
-	fs.readFile(file, function(err, data) {	
-		if(err) throw err;
+	data = fs.readFileSync(file);
 
 		fileNum = 1;
 		let mutCode = solm.edit(data.toString(), function(node) {
@@ -44,11 +43,10 @@ exports.mutateAddressFunctionOperator = function(file, filename){
 				mutOperator = operators[node.expression.callee.property.name];
 				tmpNode = node.getSourceCode().replace(node.expression.callee.property.name, mutOperator);
 
-				fs.writeFile("./sol_output/" + filename + '/'
-				+ path.basename(file).slice(0, -4) + "AddressFunctionSwap" 
-				+ fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(), tmpNode), 'ascii', function(err) {
-					if(err) throw err;
-				});
+				fs.writeFileSync("./sol_output/" + filename + '/'
+				    + path.basename(file).slice(0, -4) + "AddressFunctionSwap" 
+				    + fileNum.toString() + ".sol", 
+                    data.toString().replace(node.getSourceCode(), tmpNode), 'ascii');
 				fileNum++;
 	
 				tmpNodeCall = node.getSourceCode().replace(node.expression.callee.property.name,
@@ -56,24 +54,23 @@ exports.mutateAddressFunctionOperator = function(file, filename){
 				);
 				tmpNodeCall = tmpNodeCall.replace(';', '();');
 	
-                fs.writeFile("./sol_output/" + filename + '/'
-                + path.basename(file).slice(0, -4) + "AddressFunction"
-                + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(), tmpNodeCall), 'ascii', function(err) {
-                    if(err) throw err;
-                });
+                fs.writeFileSync("./sol_output/" + filename + '/'
+                    + path.basename(file).slice(0, -4) + "AddressFunction"
+                    + fileNum.toString() + ".sol", 
+                    data.toString().replace(node.getSourceCode(), tmpNodeCall), 'ascii');
                 fileNum++;
 
 
 				if(typeof node.expression.arguments[0] != 'undefined'
-				&& node.expression.arguments[0].type == 'Literal'){
+				    && node.expression.arguments[0].type == 'Literal'
+                ){
 
 					tmpNode = node.getSourceCode().replace(node.expression.arguments[0].value, '0')
 
-					fs.writeFile("./sol_output/" + filename + '/'
+					fs.writeFileSync("./sol_output/" + filename + '/'
 						+ path.basename(file).slice(0, -4) + "AddressFunctionLiteral"
-						+ fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(), tmpNode), 'ascii', function(err) {
-							if(err) throw err;
-					});
+						+ fileNum.toString() + ".sol", 
+                        data.toString().replace(node.getSourceCode(), tmpNode), 'ascii');
 					fileNum++
 
 					
@@ -81,8 +78,5 @@ exports.mutateAddressFunctionOperator = function(file, filename){
 			}
 
 		});
-		
-	})
-	
 }
 

@@ -17,27 +17,21 @@ let options = {
 
 exports.mutateBlockOperator = function(file, filename) {
     var ast;
-    fs.readFile(file, function(err, data) {
-        if(err) throw err;
+    data = fs.readFileSync(file);
 
         fileNum = 1;
         let mutCode = solm.edit(data.toString(), function(node) {
             if(node.type === 'BlockStatement') {
 
 
-                fs.writeFile("./sol_output/" +  filename + '/' 
+                fs.writeFileSync("./sol_output/" +  filename + '/' 
                     + path.basename(file).slice(0, -4) + "BlkDelMut"  
                     + fileNum.toString() + ".sol", data.toString().replace(
-                    node.getSourceCode(), "{}"), 'ascii', function(err) {
-                        if(err) throw err;
-                    }   
-                );
+                    node.getSourceCode(), "{}"), 'ascii');
                 fileNum++
             }
 
 
         });
-
-    })
 }
 

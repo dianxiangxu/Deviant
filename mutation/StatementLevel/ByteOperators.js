@@ -59,8 +59,7 @@ let options = {
 exports.mutateBytesOperator = function(file, filename){
 //	console.log("Binary Operators Found");
 	var ast;
-	fs.readFile(file, function(err, data) {	
-		if(err) throw err;
+	data = fs.readFileSync(file);
 
 		fileNum = 1;
 		let mutCode = solm.edit(data.toString(), function(node) {
@@ -72,19 +71,14 @@ exports.mutateBytesOperator = function(file, filename){
 				tmpNode = node.getSourceCode().replace(node.operator, operators[node.operator]);
 
 
-                fs.writeFile("./sol_output/" + filename + "/"
+                fs.writeFileSync("./sol_output/" + filename + "/"
                     + path.basename(file).slice(0, -4) + "ByteMut"
                     + fileNum.toString() + ".sol",
                     data.toString().replace(node.getSourceCode(),
-                    tmpNode), 'ascii', function(err) {
-                        if(err) throw err;
-                });
+                    tmpNode), 'ascii');
                 fileNum++
 			}
 
 		});
-		
-	})
-	
 }
 
