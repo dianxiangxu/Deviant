@@ -25,11 +25,10 @@ let options = {
 };
 
 
-
+//TODO: Split into multiple functions
 exports.mutateFunctionTypeOperator = function(file, filename){
 	var ast;
-	fs.readFile(file, function(err, data) {	
-		if(err) throw err;
+	data = fs.readFileSync(file);
 
 		fileNum = 1;
 		let mutCode = solm.edit(data.toString(), function(node) {
@@ -37,11 +36,10 @@ exports.mutateFunctionTypeOperator = function(file, filename){
 
 				tmpNode = node.parent.getSourceCode().replace(node.name, operators[node.name]);
 
-				fs.writeFile("./sol_output/" + filename + "/" 
-				+ path.basename(file).slice(0, -4) + "FunctionTypeSwap" 
-				+ fileNum.toString() + ".sol", data.toString().replace(node.parent.getSourceCode(), tmpNode), 'ascii', function(err) {
-					if(err) throw err;
-				});
+				fs.writeFileSync("./sol_output/" + filename + "/" 
+				    + path.basename(file).slice(0, -4) + "FunctionTypeSwap" 
+				    + fileNum.toString() + ".sol", 
+                    data.toString().replace(node.parent.getSourceCode(), tmpNode), 'ascii');
 				fileNum++;
 			
 			}
@@ -50,11 +48,10 @@ exports.mutateFunctionTypeOperator = function(file, filename){
 				
 				tmpNode = node.parent.getSourceCode().replace(node.name, "");
 
-				fs.writeFile("./sol_output/" + filename + "/"
-                + path.basename(file).slice(0, -4) + "FunctionTypeDel"
-                + fileNum.toString() + ".sol", data.toString().replace(node.parent.getSourceCode(), tmpNode), 'ascii', function(err) {
-                    if(err) throw err;
-                });
+				fs.writeFileSync("./sol_output/" + filename + "/"
+                    + path.basename(file).slice(0, -4) + "FunctionTypeDel"
+                    + fileNum.toString() + ".sol", 
+                    data.toString().replace(node.parent.getSourceCode(), tmpNode), 'ascii');
                 fileNum++;
 			}
 
@@ -77,20 +74,15 @@ exports.mutateFunctionTypeOperator = function(file, filename){
 						tmpNode = node.getSourceCode().replace('return', fTypes[i] + ' return');
 					}				
 
-					fs.writeFile("./sol_output/" + filename + "/"
+					fs.writeFileSync("./sol_output/" + filename + "/"
                 		+ path.basename(file).slice(0, -4) + "FunctionTypeIns"
                 		+ fileNum.toString() + ".sol", data.toString().replace(
-						node.getSourceCode(), tmpNode), 'ascii', function(err) {
-                    		if(err) throw err;
-               			}
-					);
+						node.getSourceCode(), tmpNode), 'ascii');
                 	fileNum++;
 				}
 			}
 
 		});
-		
-	})
 	
 }
 

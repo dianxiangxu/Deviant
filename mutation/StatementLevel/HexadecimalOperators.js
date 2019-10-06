@@ -3,54 +3,43 @@ var solm = require('solmeister');
 var path = require('path');
 
 let options = {
-	format: {
-		indent: {
-			style: '\t',
-			base: 0
-		},
-		newline: '\n\n',
-		space: ' ',
-		quotes: 'double'
-	}
+    format: {
+        indent: {
+            style: '\t',
+            base: 0
+        },
+        newline: '\n\n',
+        space: ' ',
+        quotes: 'double'
+    }
 };
 
 
 
 exports.mutateHexadecimalOperator = function(file, filename){
-	var ast;
-	fs.readFile(file, function(err, data) {	
-		if(err) throw err;
+    var ast;
+    data = fs.readFileSync(file);
 
+    fileNum = 1;
+    let mutCode = solm.edit(data.toString(), function(node) {
+        if(node.type === 'HexLiteral') {
+            tmpNode = node.getSourceCode().replace(node.value, "0");
+            tmpNodeExtra = node.getSourceCode().replace(node.value, "1234");			    
 
-		fileNum = 1;
-		let mutCode = solm.edit(data.toString(), function(node) {
-			if(node.type === 'HexLiteral') {
-				tmpNode = node.getSourceCode().replace(node.value, "0");
-                tmpNodeExtra = node.getSourceCode().replace(node.value, "1234");			    
-	
-				//Writing to mutant file
-				fs.writeFile("./sol_output/" + filename + '/' 
-				    + path.basename(file).slice(0, -4) + "HexZero" 
-				    + fileNum.toString() + ".sol", data.toString().replace(
-                    node.getSourceCode(), tmpNode), 'ascii', function(err) {
-					    if(err) throw err;
-				    }
-                );
-				fileNum++;
+            //Writing to mutant file
+            fs.writeFileSync("./sol_output/" + filename + '/' 
+                + path.basename(file).slice(0, -4) + "HexZero" 
+                + fileNum.toString() + ".sol", data.toString().replace(
+                    node.getSourceCode(), tmpNode), 'ascii');
+            fileNum++;
 
-                fs.writeFile("./sol_output/" + filename + '/'
-                    + path.basename(file).slice(0, -4) + "HexRandom"
-                    + fileNum.toString() + ".sol", data.toString().replace(
-                    node.getSourceCode(), tmpNode), 'ascii', function(err) {
-                        if(err) throw err;
-                    }
-			    );
-                fileNum++;
-			}
+            fs.writeFileSync("./sol_output/" + filename + '/'
+                + path.basename(file).slice(0, -4) + "HexRandom"
+                + fileNum.toString() + ".sol", data.toString().replace(
+                    node.getSourceCode(), tmpNode), 'ascii');
+            fileNum++;
+        }
 
-		});
-		
-	})
-	
+    });
 }
 

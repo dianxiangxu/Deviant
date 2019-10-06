@@ -23,9 +23,7 @@ exports.mutateInsertSuper = function(file, filename){
 	svList = utility.getParentStateVariables(file);
     overridingList = utility.buildOverridingList(file);
 
-	fs.readFile(file, function(err, data) {	
-		if(err) throw err;
-
+	data = fs.readFileSync(file);
 		fileNum = 1;
 		let mutCode = solm.edit(data.toString(), function(node) {
 			
@@ -35,13 +33,10 @@ exports.mutateInsertSuper = function(file, filename){
 				tmpNode = node.getSourceCode().replace(node.callee.name,'super.'+node.callee.name);
 
 
-                fs.writeFile("./sol_output/" + filename + "/"  
+                fs.writeFileSync("./sol_output/" + filename + "/"  
 				    + path.basename(file).slice(0, -4) + "SuperInsert" 
 				    + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-				    tmpNode), 'ascii', function(err) {
-					    if(err) throw err;
-			        }
-                );
+				    tmpNode), 'ascii');
 			    fileNum++;
             }else if (node.type == 'AssignmentExpression' && node.hasOwnProperty('left')
                 && svList.indexOf(node.left.name) >= 0
@@ -49,13 +44,10 @@ exports.mutateInsertSuper = function(file, filename){
                 tmpNode = node.getSourceCode().replace(node.left.name,'super.'+node.left.name);
 
 
-                fs.writeFile("./sol_output/" + filename + "/"
+                fs.writeFileSync("./sol_output/" + filename + "/"
                     + path.basename(file).slice(0, -4) + "SuperInsert"          
                     + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-                    tmpNode), 'ascii', function(err) {
-                        if(err) throw err;
-                    }
-                );
+                    tmpNode), 'ascii');
                 fileNum++;
 
             }else if (node.type == 'BinaryExpression' && 
@@ -68,26 +60,19 @@ exports.mutateInsertSuper = function(file, filename){
                     tmpNode = node.getSourceCode().replace(node.right.name,'super.'+node.right.name);
                 }
 
-                fs.writeFile("./sol_output/" + filename + "/"
+                fs.writeFileSync("./sol_output/" + filename + "/"
                     + path.basename(file).slice(0, -4) + "SuperInsert"
                     + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-                    tmpNode), 'ascii', function(err) {
-                        if(err) throw err;
-                    }
-                );
+                    tmpNode), 'ascii');
                 fileNum++;
 
             }
 
 		});
-		
-	})
 }
 
 exports.mutateDeleteSuper = function (file, filename) {
-    fs.readFile(file, function(err, data) {
-        if(err) throw err;
-
+    data = fs.readFileSync(file);
         fileNum = 1;
         let mutCode = solm.edit(data.toString(), function(node) {
 
@@ -97,49 +82,40 @@ exports.mutateDeleteSuper = function (file, filename) {
 
                 tmpNode = node.getSourceCode().replace('super', 'this');
 
-                fs.writeFile("./sol_output/" + filename + "/"
-                + path.basename(file).slice(0, -4) + "SuperDelete"
-                + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-                tmpNode), 'ascii', function(err) {
-                    if(err) throw err;
-                });
+                fs.writeFileSync("./sol_output/" + filename + "/"
+                    + path.basename(file).slice(0, -4) + "SuperDelete"
+                    + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
+                    tmpNode), 'ascii');
                 fileNum++;
             }
         });
 
-    })
 }
 
 exports.mutateHidingVariableDelete = function (file, filename) {
     svList = utility.getParentStateVariables(file);
 
-    fs.readFile(file, function(err, data) {
-        if(err) throw err;
-
+    data = fs.readFileSync(file);
         fileNum = 1;
         let mutCode = solm.edit(data.toString(), function(node) {
 
             if(node.type == 'StateVariableDeclaration' && svList.indexOf(node.name) >= 0
             ) {
 
-                fs.writeFile("./sol_output/" + filename + "/"
+                fs.writeFileSync("./sol_output/" + filename + "/"
                     + path.basename(file).slice(0, -4) + "HidingVariableDelete"
                     + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-                    ""), 'ascii', function(err) {
-                        if(err) throw err;
-                    }
-                );
+                    ""), 'ascii');
                 fileNum++;
             }
         });
-    });
 }
 
 exports.mutateHidingVariableInsert = function (file, filename) {
     svList = utility.getParentStateVariableDeclaration(file);
 
-    fs.readFile(file, function(err, data) {
-        if(err) throw err;
+    data = fs.readFileSync(file);
+       
 
         fileNum = 1;
         let mutCode = solm.edit(data.toString(), function(node) {
@@ -148,23 +124,18 @@ exports.mutateHidingVariableInsert = function (file, filename) {
                 for(var i = 0; i < svList.length; i++) {
                     tmpNode = node.getSourceCode().replace('{', '{\n\t' + svList[i] + '\n');
 
-                    fs.writeFile("./sol_output/" + filename + "/"
+                    fs.writeFileSync("./sol_output/" + filename + "/"
                         + path.basename(file).slice(0, -4) + "HidingVariableDelete"
                         + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-                        tmpNode), 'ascii', function(err) {
-                            if(err) throw err;
-                        }
-                    );
+                        tmpNode), 'ascii');
                     fileNum++;
                 }
             }
         });
-    });
 }
 
 exports.mutateTypeCastInsertion = function (file, filename) {
-    fs.readFile(file, function(err, data) {
-        if(err) throw err;
+    data = fs.readFileSync(file);
 
         importList = utility.collectImportedContracts(file);
 		varTypeDict = utility.getVarTypeDict(file);
@@ -179,25 +150,20 @@ exports.mutateTypeCastInsertion = function (file, filename) {
 				for (var i = 0; i < pContracts.length; i++) {
 					tmpNode = node.getSourceCode().replace(node.callee.object.name, pContracts[i]+'('+node.callee.object.name+')');
 
-                    fs.writeFile("./sol_output/" + filename + "/"
+                    fs.writeFileSync("./sol_output/" + filename + "/"
                         + path.basename(file).slice(0, -4) + "TypeCastInsertion"
                         + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-                        tmpNode), 'ascii', function(err) {
-                            if(err) throw err;
-                        }
-                    );
+                        tmpNode), 'ascii');
                     fileNum++;
 
 				}	
 			}	
 		
 		});
-    });
 }
 
 exports.mutateTypeCastDeletion = function(file, filename) {
-    fs.readFile(file, function(err, data) {
-        if(err) throw err;
+    data = fs.readFileSync(file);
         
 		iList = utility.collectImportedContracts(file);
 		fileNum = 1;
@@ -209,24 +175,18 @@ exports.mutateTypeCastDeletion = function(file, filename) {
             	tmpNode = node.getSourceCode().replace(node.object.callee.name+'(', "");
 				tmpNode = tmpNode.replace(')', "");
 
-                fs.writeFile("./sol_output/" + filename + "/"
+                fs.writeFileSync("./sol_output/" + filename + "/"
                     + path.basename(file).slice(0, -4) + "TypeCastDeletion"
                     + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-                    tmpNode), 'ascii', function(err) {
-                        if(err) throw err;
-                    }
-                );
+                    tmpNode), 'ascii');
                 fileNum++;
                
             }
         });
-    });
 }
 
 exports.mutateTypeCastChange = function(file, filename) {
-    fs.readFile(file, function(err, data) {
-        if(err) throw err;
-
+    data = fs.readFileSync(file);
 		importParentDict = utility.getImportedContractParentsDict(file, filename);
 	
         fileNum = 1;
@@ -240,13 +200,20 @@ exports.mutateTypeCastChange = function(file, filename) {
                 	fs.writeFile("./sol_output/" + filename + "/"
                     	+ path.basename(file).slice(0, -4) + "TypeCastChange"
                     	+ fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-                    	tmpNode), 'ascii', function(err) {
-                        	if(err) throw err;
-                   		}
-                	);
+                    	tmpNode), 'ascii');
                 	fileNum++;
 				}
             }
         });
-    });
+   
+}
+
+exports.mutateSuperTypeAll = function(file, filename) {
+    exports.mutateTypeCastChange(file, filename);
+    exports.mutateTypeCastDeletion(file, filename);
+    exports.mutateTypeCastInsertion(file, filename);
+    exports.mutateHidingVariableInsert(file, filename);
+    exports.mutateHidingVariableDelete(file, filename);
+    exports.mutateDeleteSuper(file, filename);
+    exports.mutateInsertSuper(file, filename);
 }
