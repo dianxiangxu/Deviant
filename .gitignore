@@ -1,3 +1,5 @@
 node_modules/*
 sol_output/*
 txt_reports/*
+*.swp
+*.swo
