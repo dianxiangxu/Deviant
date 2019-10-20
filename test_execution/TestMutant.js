@@ -43,7 +43,7 @@ exports.runMutants = function(mutantDirectory, contractDirectory, contractFile, 
 			).toString();
 				
 			console.log(child);
-            if(child.includes('failing')) {
+            if(child.includes('[0-9]*\s*failing')) {
                 killed++
                 total_mutants++;
                 console.log('Mutant killed: ' + file);
@@ -68,7 +68,7 @@ exports.runMutants = function(mutantDirectory, contractDirectory, contractFile, 
             }else{
                 console.log(err);
             }	
-			if(err.stdout.toString().includes('failing')){
+			if(err.stdout.toString().includes('[0-9]*\s*failing')){
 				killed++;
                 total_mutants++;
 				console.log('Mutant killed: ' + file);
