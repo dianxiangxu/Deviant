@@ -43,19 +43,19 @@ exports.runMutants = function(mutantDirectory, contractDirectory, contractFile, 
 			).toString();
 				
 			console.log(child);
-            if(child.includes('[0-9]*\s*failing')) {
+            if(child.match(/[0-9]*\s*failing/)) {
                 killed++
                 total_mutants++;
                 console.log('Mutant killed: ' + file);
                 
 				fs.appendFileSync(reportDirectory + contractName + 'MutationReport.txt', filename + '\t killed \n');
-            }else if(child.includes('passing')){
+            }else if(child.match(/[0-9]*\s*passing/)){
 				live++;
 				total_mutants++;
 				console.log('Mutant live: ' + file);
 				
 				fs.appendFileSync(reportDirectory + contractName + 'MutationReport.txt', filename + '\t live \n');
-			}else if(child.includes('Compilation failed')){
+			}else if(child.match(/Compilation\s*failed/)){
                 console.log('Mutant not valid: ' + file);
                 fs.unlinkSync(file);
             }
@@ -68,13 +68,13 @@ exports.runMutants = function(mutantDirectory, contractDirectory, contractFile, 
             }else{
                 console.log(err);
             }	
-			if(err.stdout.toString().includes('[0-9]*\s*failing')){
+			if(err.stdout.toString().match(/[0-9]*\s*failing/)){
 				killed++;
                 total_mutants++;
 				console.log('Mutant killed: ' + file);
                 fs.appendFileSync(reportDirectory + contractName + 'MutationReport.txt', filename + '\t killed \n');
-			}else if(err.stdout.toString().includes('Compilation failed')
-                || err.stdout.toString().includes('Compiliation failed') //mispelling that exists in output
+			}else if(err.stdout.toString().match(/Compilation\s*failed/)
+                || err.stdout.toString().match(/Compiliation\s*failed/) //mispelling that exists in output
             ){
 				console.log('Mutant not valid: ' + file);
 				fs.unlinkSync(file);
