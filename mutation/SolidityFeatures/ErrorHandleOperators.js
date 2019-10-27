@@ -57,14 +57,14 @@ exports.mutateErrorHandleOperator = function(file, filename){
             fs.writeFileSync("./sol_output/" + filename + "/"
                 + path.basename(file).slice(0, -4) + "ErrorHandleReqInsert"
                 + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(), 
-                    node.getSourceCode().substring(0, pos) + require_statement)
+                    node.getSourceCode().substring(0, pos) + REQUIRE_STATEMENT)
                 + node.getSourceCode().substring(pos + 1), 'ascii');
             fileNum++
 
             fs.writeFileSync("./sol_output/" + filename + "/"
                 + path.basename(file).slice(0, -4) + "ErrorHandleAssertInsert"
                 + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-                    node.getSourceCode().substring(0, pos) + assert_statement)
+                    node.getSourceCode().substring(0, pos) + ASSERT_STATEMENT)
                 + node.getSourceCode().substring(pos + 1), 'ascii');
             fileNum++
 
@@ -72,7 +72,7 @@ exports.mutateErrorHandleOperator = function(file, filename){
             fs.writeFileSync("./sol_output/" + filename + "/"
                 + path.basename(file).slice(0, -4) + "ErrorHandleRevertInsert"
                 + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-                    node.getSourceCode().substring(0, pos) + revert_statement)
+                    node.getSourceCode().substring(0, pos) + REVERT_STATEMENT)
                 + node.getSourceCode().substring(pos + 1), 'ascii');
             fileNum++
 

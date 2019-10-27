@@ -9,7 +9,7 @@ var operators = {
     'random': '0x12345'
 };
 
-var kwds = {
+var ignoreKwds = {
     'public': true,
     'private': true,
     'view': true,
@@ -17,7 +17,8 @@ var kwds = {
     'internal': true,
     'memory': true,
     'storage': true,
-    'external': true
+    'external': true,
+    'constant': true
 };
 
 let options = {
@@ -41,14 +42,11 @@ exports.mutateModifierOperator = function(file, filename){
     fileNum = 1;
     var modifier = null;
     let mutCode = solm.edit(data.toString(), function(node) {
-
-        //If contract has more than two calls to change addresses
-        //to different contracts. Swap the calls.
         if(node.type === 'FunctionDeclaration' && node.modifiers != null){
             var loctn = 0;
             var anyMod = false;
             node.modifiers.forEach(function(modif){
-                if(!kwds[modif.name]){
+                if(!ignoreKwds[modif.name]){
                     if(modifier == null){
                         modifier = modif;
                         anyMod = true;
@@ -58,7 +56,7 @@ exports.mutateModifierOperator = function(file, filename){
                     fs.writeFileSync("./sol_output/" + filename + "/" 
                         + path.basename(file).slice(0, -4) + "ModifierDelMut" 
                         + fileNum.toString() + ".sol", data.toString().replace(node.getSourceCode(),
-                        tmpNode), 'ascii');
+                            tmpNode), 'ascii');
                     fileNum++;
                 }
                 loctn++;
