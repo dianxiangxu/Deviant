@@ -49,9 +49,11 @@ exports.mutateSelfdestructOperator = function(file, filename){
             var selfdestruct_statement = 'selfdestruct(address(0x123));\n }';
             var pos = node.getSourceCode().lastIndexOf('}');
 
-            if (node.getSourceCode().includes('return ')){
+            //Matching to a return statement
+            isMatching = node.getSourceCode().match(/return\s*.*;/)
+            if (isMatching){
                 //Change the position of insertion in case the block has a return statement.
-                pos = node.getSourceCode().lastIndexOf('return ');
+                pos = node.getSourceCode().lastIndexOf(isMatching[0])+isMatching[0].length;
             }
 
             fs.writeFileSync("./sol_output/" + filename + "/"
