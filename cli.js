@@ -107,15 +107,26 @@ var txt_report_directory =  '';
 //TODO: Come up with a way to mutate more
 //than one file at a time
 try{
+    var fileList = []
+    var isFileArg = false
     for(i = 2; i < process.argv.length; i++) {
         if(process.argv[i] == "--file"){
-            f = process.argv[i+1]
+            f = process.argv[i+1];
+            fileList[fileList.length] = f
+            isFileArg = true;
         }else if(process.argv[i] == "--operators"){
             operators = process.argv[i+1];
             is_default = false;
+            isFileArg = false;
         }else if(process.argv[i] == "--project-directory"){
             project_directory = process.argv[i+1];
+            isFileArg = false;
+        }else if (isFileArg){
+            f = process.argv[i]
+            fileList[fileList.length] = f
         }
+
+
     }
 
     if (is_default){console.log("Using default operator flag SOLIDITY");}
@@ -158,10 +169,12 @@ try{
     process.exit(1);
 }
 
-genMutants(f, project_directory, operators);
+for(var i = 0; i < fileList.length; i++)
+    genMutants(fileList[i], project_directory, operators);
 
 //console.log(f);
 //console.log(mutant_output_directory);
 //console.log(txt_report_directory);
 
-runMutants(f, './sol_output/'+filename_directory.replace('//', '/')+'/', project_directory, txt_report_directory);
+for(var i = 0; i < fileList.length; i++)
+    runMutants(fileList[i], './sol_output/'+filename_directory.replace('//', '/')+'/', project_directory, txt_report_directory);
